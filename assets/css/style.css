@@ -1,0 +1,14 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 98vh;
+    background-color: aqua;
+}
+
+#mainCard {
+    height: 300px;
+    width: 500px;
+    background-color: bisque;
+    text-align: center;
+}
