@@ -1,8 +1,13 @@
+*{
+    box-sizing: border-box;
+}
+
 main {
+    height: 98vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 98vh;
     background-color: aqua;
 }
 
@@ -10,5 +15,18 @@ main {
     height: 300px;
     width: 500px;
     background-color: bisque;
-    text-align: center;
+}
+
+#introCard, #quizCard {
+    height: inherit;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:flex-start;
+}
+
+#quizTimer {
+    width: 175px;
+    background-color: brown;
 }
