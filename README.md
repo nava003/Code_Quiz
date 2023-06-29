@@ -29,6 +29,7 @@
 
 The following image shows the web application's appearance and functionality:  
   
+![04-web-apis-homework-demo](https://github.com/nava003/Module_4_Challenge/assets/32070635/3108de63-25d7-4a7a-ab69-956dd4551af3)
 
 ## Student Result
 
