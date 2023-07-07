@@ -1,9 +1,9 @@
-*{
+* {
     box-sizing: border-box;
 }
 
 body {
-    background-color:blanchedalmond;
+    background-color: blanchedalmond;
 }
 
 main {
@@ -15,7 +15,7 @@ main {
 }
 
 #quizTimer {
-    margin:0 0 10px 0;
+    margin: 0 0 10px 0;
     padding: 5px;
     width: 185px;
     background-color: rgb(241, 89, 89);
@@ -27,13 +27,18 @@ main {
     background-color: rgb(252, 214, 168);
 }
 
-#introCard, #quizCard {
+#introCard,
+#quizCard {
     height: inherit;
     padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+
+#askQuestion {
+    margin: 0;
 }
 
 #startBtn {
@@ -45,5 +50,18 @@ main {
 }
 
 #startBtn:hover {
-    background-color:rgb(241, 135, 135);
+    background-color: rgb(241, 135, 135);
+}
+
+.choiceBtn {
+    display: flex;
+    flex-direction: column;
+    margin: 3px 0;
+    padding: 5px;
+    background-color: #FDB55E;
+    border: 2px solid #7D5A2E;
+}
+
+.choiceBtn:hover {
+    background-color: #E6C88E;
 }

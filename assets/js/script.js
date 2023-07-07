@@ -12,6 +12,7 @@ quizDisplay.setAttribute("style", "display:none");
 
 // Variable Declarations
 var secRemain = 121;
+var questCount = 0;
 
 // Object-Array Declaration of QnA
 var QnAList = [
@@ -75,22 +76,43 @@ function startTimer() {
 
 function startQuiz() {
     introDisplay.setAttribute("style", "display:none");
-    quizDisplay.setAttribute("style", "display:flex;justify-content: space-between;align-items: flex-start;");
+    quizDisplay.setAttribute("style", "display:flex;justify-content:space-between;align-items:flex-start;");
 
-    var orderList = document.createElement('ol');
-    ansDisplay.append(orderList);
+    generateQnA();
 
-    var questCount = 0;
+    verifyAns();
+};
+
+function generateQnA() {
     // Display Question w/ suggested answers
     questDisplay.textContent = "Question " + (questCount + 1) + ": " + QnAList[questCount].question;
     for (var i = 0; i < QnAList[questCount].answers.length; i++) {
-        var listItem = document.createElement('li');
-        listItem.textContent = QnAList[questCount].answers[i];
-        orderList.append(listItem);
+        var optionBtn = document.createElement('button');
+        optionBtn.setAttribute("id", "option" + i)
+        optionBtn.setAttribute("class", "choiceBtn");
+        optionBtn.textContent = QnAList[questCount].answers[i];
+        optionBtn.dataset.correct = QnAList[questCount].correctAns === i+1;
+        ansDisplay.append(optionBtn);
     }
-};
+}
 
-// Button Listener
+function verifyAns() {
+    ansDisplay.addEventListener('click', function(event) {
+        var eventTarget = event.target;
+        if (eventTarget.matches(".choiceBtn")) {
+            //console.log(event);
+            if (eventTarget.dataset.correct == true) {
+
+            } else {
+
+            }
+
+
+        }
+    })
+}
+
+// Button Listeners
 startBtn.addEventListener('click', function () {
     startTimer();
     startQuiz();
