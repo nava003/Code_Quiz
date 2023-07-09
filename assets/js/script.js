@@ -12,7 +12,12 @@ quizDisplay.setAttribute("style", "display:none");
 
 // Variable Declarations
 var secRemain = 121;
+var secPenalty = 9;
 var questCount = 0;
+
+// LocalStorage Declarations
+var userInitials = localStorage.getItem("Initials");
+var userScore = localStorage.getItem("Score");
 
 // Object-Array Declaration of QnA
 var QnAList = [
@@ -70,6 +75,8 @@ function startTimer() {
         quizTimer.textContent = "Time Remaining: " + secRemain;
         if (secRemain === 0) {
             clearInterval(timeInterval);
+
+            quizOver();
         }
     }, 1000);
 }
@@ -79,8 +86,6 @@ function startQuiz() {
     quizDisplay.setAttribute("style", "display:flex;justify-content:space-between;align-items:flex-start;");
 
     generateQnA();
-
-    verifyAns();
 };
 
 function generateQnA() {
@@ -92,24 +97,14 @@ function generateQnA() {
         optionBtn.setAttribute("class", "choiceBtn");
         optionBtn.textContent = QnAList[questCount].answers[i];
         optionBtn.dataset.correct = QnAList[questCount].correctAns === i+1;
+        // console.log(optionBtn.dataset.correct);
         ansDisplay.append(optionBtn);
+        // console.log(optionBtn);
     }
 }
 
-function verifyAns() {
-    ansDisplay.addEventListener('click', function(event) {
-        var eventTarget = event.target;
-        if (eventTarget.matches(".choiceBtn")) {
-            //console.log(event);
-            if (eventTarget.dataset.correct == true) {
+function quizOver() {
 
-            } else {
-
-            }
-
-
-        }
-    })
 }
 
 // Button Listeners
@@ -117,3 +112,25 @@ startBtn.addEventListener('click', function () {
     startTimer();
     startQuiz();
 });
+
+ansDisplay.addEventListener('click', function(event) {
+    // console.log("I've been clicked");
+    var eventTarget = event.target;
+    if (eventTarget.matches(".choiceBtn")) {
+        // console.log("It was a button!");
+        // console.log(eventTarget.dataset.correct);
+        if (eventTarget.dataset.correct == "true") {
+            // console.log("Correct!");
+            var ansBtns = ansDisplay.getElementsByClassName("choiceBtn");
+            for (var n = (ansBtns.length - 1); n > -1; n--) {
+                ansBtns[n].remove();
+            }
+            questCount++;
+            generateQnA();
+        } else {
+            // console.log("I'm an error");
+        }
+
+
+    }
+})
