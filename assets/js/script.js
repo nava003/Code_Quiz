@@ -1,5 +1,5 @@
 // Selection Declarations
-var mainElement = document.getElementsByTagName('main');
+var mainDisplay = document.querySelector('#mainCard');
 var introDisplay = document.querySelector('#introCard');
 var quizDisplay = document.querySelector('#quizCard');
 var questDisplay = document.querySelector('#askQuestion')
@@ -16,8 +16,8 @@ ansResult.setAttribute("style", "display:none");
 // Variable Declarations
 var secRemain = 121;
 var secPenalty = 9;
-var resultTimer = 3;
 var questCount = 0;
+var scoreValue = secRemain;
 
 // LocalStorage Declarations
 var userInitials = localStorage.getItem("Initials");
@@ -69,8 +69,10 @@ var QnAList = [
         question: "Is Documentation important?",
         answers: ["Yes", "No"],
         correctAns: 1
-    }];
+    }
+];
 
+// Beginning of Functions //
 function startTimer() {
     quizTimer.setAttribute("style", "display:block");
 
@@ -93,22 +95,55 @@ function startQuiz() {
 };
 
 function generateQnA() {
-    // Display Question w/ suggested answers
-    questDisplay.textContent = "Question " + (questCount + 1) + ": " + QnAList[questCount].question;
-    for (var i = 0; i < QnAList[questCount].answers.length; i++) {
-        var optionBtn = document.createElement('button');
-        optionBtn.setAttribute("id", "option" + i)
-        optionBtn.setAttribute("class", "choiceBtn");
-        optionBtn.textContent = QnAList[questCount].answers[i];
-        optionBtn.dataset.correct = QnAList[questCount].correctAns === i + 1;
-        // console.log(optionBtn.dataset.correct);
-        ansDisplay.append(optionBtn);
-        // console.log(optionBtn);
+
+    if (questCount < QnAList.length) {
+        // Display Question w/ suggested answers
+        questDisplay.textContent = "Question " + (questCount + 1) + ": " + QnAList[questCount].question;
+        for (var i = 0; i < QnAList[questCount].answers.length; i++) {
+            var optionBtn = document.createElement('button');
+            // optionBtn.setAttribute("id", "option" + i);
+            optionBtn.setAttribute("class", "choiceBtn");
+            optionBtn.textContent = QnAList[questCount].answers[i];
+            optionBtn.dataset.correct = QnAList[questCount].correctAns === i + 1;
+            // console.log(optionBtn.dataset.correct);
+            ansDisplay.append(optionBtn);
+            // console.log(optionBtn);
+        }
+    } else {
+        quizOver();
     }
+}
+
+function quizOver() {
+    quizTimer.textContent = "Time's Up!";
+    quizDisplay.setAttribute("style", "display:none");
+
+    var resultSentence = document.createElement('p');
+    resultSentence.textContent = "Congrats! You scored " + scoreValue + " points!";
+    mainDisplay.append(resultSentence);
+    
+    var initialLabel = document.createElement('label');
+    initialLabel.for = "userInitials";
+    initialLabel.textContent = "Insert your initials here:";
+    mainDisplay.append(initialLabel);
+
+    var initialInput = document.createElement('input');
+    initialInput.type = "text";
+    initialInput.name = "userInitials";
+    initialInput.id = "userInitials";
+    initialInput.placeholder = "ABC";
+    mainDisplay.append(initialInput);
+
+    var userInitials = document.querySelector("#userInitials").value;
+    var userScore = scoreValue;
+
+    localStorage.setItem("Initials", userInitials);
+    localStorage.setItem("Score", userScore);
 }
 
 function displayResult(boolean) {
     var booResult = boolean;
+    var resultTimer = 3;
     var resultInterval = setInterval(function () {
         resultTimer--;
 
@@ -134,12 +169,9 @@ function removeAns() {
         ansBtns[n].remove();
     }
 }
+// End of Functions //
 
-function quizOver() {
-
-}
-
-// Button Listeners
+// Button Listeners //
 startBtn.addEventListener('click', function () {
     startTimer();
     startQuiz();
@@ -168,3 +200,4 @@ ansDisplay.addEventListener('click', function (event) {
         }
     }
 })
+// End of Button Listeners //
