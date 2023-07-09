@@ -1,18 +1,22 @@
-// ID Selection Declarations
+// Selection Declarations
+var mainElement = document.getElementsByTagName('main');
 var introDisplay = document.querySelector('#introCard');
 var quizDisplay = document.querySelector('#quizCard');
 var questDisplay = document.querySelector('#askQuestion')
 var ansDisplay = document.querySelector('#ansList');
 var quizTimer = document.querySelector('#quizTimer');
 var startBtn = document.querySelector('#startBtn');
+var ansResult = document.querySelector('#ansResult');
 
 // Style Initalization
 quizTimer.setAttribute("style", "display:none");
 quizDisplay.setAttribute("style", "display:none");
+ansResult.setAttribute("style", "display:none");
 
 // Variable Declarations
 var secRemain = 121;
 var secPenalty = 9;
+var resultTimer = 3;
 var questCount = 0;
 
 // LocalStorage Declarations
@@ -96,10 +100,38 @@ function generateQnA() {
         optionBtn.setAttribute("id", "option" + i)
         optionBtn.setAttribute("class", "choiceBtn");
         optionBtn.textContent = QnAList[questCount].answers[i];
-        optionBtn.dataset.correct = QnAList[questCount].correctAns === i+1;
+        optionBtn.dataset.correct = QnAList[questCount].correctAns === i + 1;
         // console.log(optionBtn.dataset.correct);
         ansDisplay.append(optionBtn);
         // console.log(optionBtn);
+    }
+}
+
+function displayResult(boolean) {
+    var booResult = boolean;
+    var resultInterval = setInterval(function () {
+        resultTimer--;
+
+        ansResult.setAttribute("style", "display:block");
+
+        if (booResult == true) {
+            ansResult.textContent = "Correct!";
+        } else {
+            ansResult.textContent = "Incorrect!";
+        }
+
+        if (resultTimer == 0) {
+            clearInterval(resultInterval);
+            ansResult.textContent = "";
+            ansResult.setAttribute("style", "display:none");
+        }
+    }, 1000);
+}
+
+function removeAns() {
+    var ansBtns = ansDisplay.getElementsByClassName("choiceBtn");
+    for (var n = (ansBtns.length - 1); n > -1; n--) {
+        ansBtns[n].remove();
     }
 }
 
@@ -113,7 +145,7 @@ startBtn.addEventListener('click', function () {
     startQuiz();
 });
 
-ansDisplay.addEventListener('click', function(event) {
+ansDisplay.addEventListener('click', function (event) {
     // console.log("I've been clicked");
     var eventTarget = event.target;
     if (eventTarget.matches(".choiceBtn")) {
@@ -121,16 +153,18 @@ ansDisplay.addEventListener('click', function(event) {
         // console.log(eventTarget.dataset.correct);
         if (eventTarget.dataset.correct == "true") {
             // console.log("Correct!");
-            var ansBtns = ansDisplay.getElementsByClassName("choiceBtn");
-            for (var n = (ansBtns.length - 1); n > -1; n--) {
-                ansBtns[n].remove();
-            }
+            removeAns();
+            displayResult(true);
+
             questCount++;
             generateQnA();
         } else {
-            // console.log("I'm an error");
+            removeAns();
+            displayResult(false);
+
+            secRemain = secRemain - secPenalty;
+            questCount++;
+            generateQnA();
         }
-
-
     }
 })

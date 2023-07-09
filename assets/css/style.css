@@ -65,3 +65,14 @@ main {
 .choiceBtn:hover {
     background-color: #E6C88E;
 }
+
+#ansResult {
+    width: 500px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid chocolate;
+    font-size: 25px;
+    font-weight: bolder;
+    font-style: italic;
+    color:chocolate;
+}
