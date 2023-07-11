@@ -1,23 +1,31 @@
 // Selection Declarations
-var mainDisplay = document.querySelector('#mainCard');
-var introDisplay = document.querySelector('#introCard');
-var quizDisplay = document.querySelector('#quizCard');
-var questDisplay = document.querySelector('#askQuestion')
-var ansDisplay = document.querySelector('#ansList');
+var mainCard = document.querySelector('#mainCard');
+var introCard = document.querySelector('#introCard');
+var quizCard = document.querySelector('#quizCard');
+var questDisplay = document.querySelector('#askQuestion');
+var ansList = document.querySelector('#ansList');
 var quizTimer = document.querySelector('#quizTimer');
 var startBtn = document.querySelector('#startBtn');
+var endCard = document.querySelector('#endCard');
+var resultSentence = document.querySelector('#quizCongrats');
 var ansResult = document.querySelector('#ansResult');
+var highscoreCard = document.querySelector('#highscoreCard');
+var scoreContainer = document.querySelector('#scoreContainer');
+var backBtn = document.querySelector('#backBtn');
+var clearBtn = document.querySelector('#clearBtn');
 
 // Style Initalization
 quizTimer.setAttribute("style", "display:none");
-quizDisplay.setAttribute("style", "display:none");
+quizCard.setAttribute("style", "display:none");
+endCard.setAttribute("style", "display:none");
 ansResult.setAttribute("style", "display:none");
+// highscoreCard.setAttribute("style", "display:none");
 
 // Variable Declarations
+var timeInterval = null;
 var secRemain = 121;
-var secPenalty = 9;
+var secPenalty = 21;
 var questCount = 0;
-var scoreValue = secRemain;
 
 // LocalStorage Declarations
 var userInitials = localStorage.getItem("Initials");
@@ -72,24 +80,23 @@ var QnAList = [
     }
 ];
 
+// // // // // // // // // //
 // Beginning of Functions //
 function startTimer() {
     quizTimer.setAttribute("style", "display:block");
 
-    var timeInterval = setInterval(function () {
+    timeInterval = setInterval(function () {
         secRemain--;
         quizTimer.textContent = "Time Remaining: " + secRemain;
         if (secRemain === 0) {
-            clearInterval(timeInterval);
-
             quizOver();
         }
     }, 1000);
 }
 
 function startQuiz() {
-    introDisplay.setAttribute("style", "display:none");
-    quizDisplay.setAttribute("style", "display:flex;justify-content:space-between;align-items:flex-start;");
+    introCard.setAttribute("style", "display:none");
+    quizCard.setAttribute("style", "display:flex;justify-content:space-between;align-items:flex-start;");
 
     generateQnA();
 };
@@ -106,7 +113,7 @@ function generateQnA() {
             optionBtn.textContent = QnAList[questCount].answers[i];
             optionBtn.dataset.correct = QnAList[questCount].correctAns === i + 1;
             // console.log(optionBtn.dataset.correct);
-            ansDisplay.append(optionBtn);
+            ansList.append(optionBtn);
             // console.log(optionBtn);
         }
     } else {
@@ -115,27 +122,16 @@ function generateQnA() {
 }
 
 function quizOver() {
-    quizTimer.textContent = "Time's Up!";
-    quizDisplay.setAttribute("style", "display:none");
+    clearInterval(timeInterval);
+    quizTimer.textContent = "Quiz Over!";
+    quizCard.setAttribute("style", "display:none");
+    endCard.setAttribute("style", "display:block");
 
-    var resultSentence = document.createElement('p');
-    resultSentence.textContent = "Congrats! You scored " + scoreValue + " points!";
-    mainDisplay.append(resultSentence);
-    
-    var initialLabel = document.createElement('label');
-    initialLabel.for = "userInitials";
-    initialLabel.textContent = "Insert your initials here:";
-    mainDisplay.append(initialLabel);
+    var userScore = secRemain;
 
-    var initialInput = document.createElement('input');
-    initialInput.type = "text";
-    initialInput.name = "userInitials";
-    initialInput.id = "userInitials";
-    initialInput.placeholder = "ABC";
-    mainDisplay.append(initialInput);
+    resultSentence.textContent = "Congrats! You scored " + secRemain + " points!";
 
     var userInitials = document.querySelector("#userInitials").value;
-    var userScore = scoreValue;
 
     localStorage.setItem("Initials", userInitials);
     localStorage.setItem("Score", userScore);
@@ -143,41 +139,31 @@ function quizOver() {
 
 function displayResult(boolean) {
     var booResult = boolean;
-    var resultTimer = 3;
-    var resultInterval = setInterval(function () {
-        resultTimer--;
 
-        ansResult.setAttribute("style", "display:block");
+    ansResult.setAttribute("style", "display:block");
 
-        if (booResult == true) {
-            ansResult.textContent = "Correct!";
-        } else {
-            ansResult.textContent = "Incorrect!";
-        }
-
-        if (resultTimer == 0) {
-            clearInterval(resultInterval);
-            ansResult.textContent = "";
-            ansResult.setAttribute("style", "display:none");
-        }
-    }, 1000);
-}
-
-function removeAns() {
-    var ansBtns = ansDisplay.getElementsByClassName("choiceBtn");
-    for (var n = (ansBtns.length - 1); n > -1; n--) {
-        ansBtns[n].remove();
+    if (booResult == true) {
+        ansResult.textContent = "Correct!";
+    } else {
+        ansResult.textContent = "Incorrect!";
     }
-}
-// End of Functions //
 
+    setTimeout(function () {
+        ansResult.textContent = "";
+        ansResult.setAttribute("style", "display:none");
+    }, 2000);
+}
+// End of Functions  //
+// // // // // // // //
+
+// // // // // // // //
 // Button Listeners //
 startBtn.addEventListener('click', function () {
     startTimer();
     startQuiz();
 });
 
-ansDisplay.addEventListener('click', function (event) {
+ansList.addEventListener('click', function (event) {
     // console.log("I've been clicked");
     var eventTarget = event.target;
     if (eventTarget.matches(".choiceBtn")) {
@@ -185,13 +171,13 @@ ansDisplay.addEventListener('click', function (event) {
         // console.log(eventTarget.dataset.correct);
         if (eventTarget.dataset.correct == "true") {
             // console.log("Correct!");
-            removeAns();
+            ansList.textContent = "";
             displayResult(true);
 
             questCount++;
             generateQnA();
         } else {
-            removeAns();
+            ansList.textContent = "";
             displayResult(false);
 
             secRemain = secRemain - secPenalty;
@@ -199,5 +185,8 @@ ansDisplay.addEventListener('click', function (event) {
             generateQnA();
         }
     }
-})
+});
+
+
 // End of Button Listeners //
+// // // // // // // // // //
