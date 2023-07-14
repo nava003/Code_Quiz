@@ -108,6 +108,12 @@ label {
     background-color: #E6B149;
 }
 
+#warnMsg {
+    text-align: left;
+    margin-top: 15px;
+    margin-left: 35px;
+}
+
 #ansResult {
     width: 500px;
     margin-top: 15px;

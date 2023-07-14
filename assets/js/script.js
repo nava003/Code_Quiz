@@ -2,15 +2,16 @@
 var mainCard = document.querySelector('#mainCard');
 var introCard = document.querySelector('#introCard');
 var quizCard = document.querySelector('#quizCard');
+var endCard = document.querySelector('#endCard');
+var highscoreCard = document.querySelector('#highscoreCard');
+var quizTimer = document.querySelector('#quizTimer');
 var questDisplay = document.querySelector('#askQuestion');
 var ansList = document.querySelector('#ansList');
-var quizTimer = document.querySelector('#quizTimer');
-var startBtn = document.querySelector('#startBtn');
-var endCard = document.querySelector('#endCard');
 var resultSentence = document.querySelector('#quizCongrats');
 var ansResult = document.querySelector('#ansResult');
-var highscoreCard = document.querySelector('#highscoreCard');
 var scoreContainer = document.querySelector('#scoreContainer');
+var startBtn = document.querySelector('#startBtn');
+var submitBtn = document.querySelector('#submitBtn');
 var backBtn = document.querySelector('#backBtn');
 var clearBtn = document.querySelector('#clearBtn');
 
@@ -19,7 +20,7 @@ quizTimer.setAttribute("style", "display:none");
 quizCard.setAttribute("style", "display:none");
 endCard.setAttribute("style", "display:none");
 ansResult.setAttribute("style", "display:none");
-// highscoreCard.setAttribute("style", "display:none");
+highscoreCard.setAttribute("style", "display:none");
 
 // Variable Declarations
 var timeInterval = null;
@@ -121,22 +122,6 @@ function generateQnA() {
     }
 }
 
-function quizOver() {
-    clearInterval(timeInterval);
-    quizTimer.textContent = "Quiz Over!";
-    quizCard.setAttribute("style", "display:none");
-    endCard.setAttribute("style", "display:block");
-
-    var userScore = secRemain;
-
-    resultSentence.textContent = "Congrats! You scored " + secRemain + " points!";
-
-    var userInitials = document.querySelector("#userInitials").value;
-
-    localStorage.setItem("Initials", userInitials);
-    localStorage.setItem("Score", userScore);
-}
-
 function displayResult(boolean) {
     var booResult = boolean;
 
@@ -152,6 +137,29 @@ function displayResult(boolean) {
         ansResult.textContent = "";
         ansResult.setAttribute("style", "display:none");
     }, 2000);
+}
+
+function quizOver() {
+    clearInterval(timeInterval);
+    quizTimer.textContent = "Quiz Over!";
+    quizCard.setAttribute("style", "display:none");
+    endCard.setAttribute("style", "display:block");
+
+    var userScore = secRemain;
+    resultSentence.textContent = "Congrats! You scored " + secRemain + " points!";
+    localStorage.setItem("Score", userScore);
+}
+
+function renderHighscore() {
+    if (!userInitials || !userScore) {
+        return;
+    }
+
+    highscoreCard.setAttribute("style", "display:block");
+
+    var pElement = document.createElement('p');
+    pElement.textContent = userInitials + " - " + userScore;
+    scoreContainer.append(pElement);
 }
 // End of Functions  //
 // // // // // // // //
@@ -187,6 +195,24 @@ ansList.addEventListener('click', function (event) {
     }
 });
 
+submitBtn.addEventListener('click', function() {
+    var userInitials = document.querySelector("#userInitials").value;
+    localStorage.setItem("Initials", userInitials);
+
+    if (userInitials === "") {
+
+    }
+
+    renderHighscore();
+});
+
+backBtn.addEventListener('click', function() {
+
+});
+
+clearBtn.addEventListener('click', function() {
+    
+});
 
 // End of Button Listeners //
 // // // // // // // // // //
