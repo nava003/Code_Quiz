@@ -8,6 +8,7 @@ var quizTimer = document.querySelector('#quizTimer');
 var questDisplay = document.querySelector('#askQuestion');
 var ansList = document.querySelector('#ansList');
 var resultSentence = document.querySelector('#quizCongrats');
+var warnMsg = document.querySelector('#warnMsg');
 var ansResult = document.querySelector('#ansResult');
 var scoreContainer = document.querySelector('#scoreContainer');
 var startBtn = document.querySelector('#startBtn');
@@ -27,10 +28,6 @@ var timeInterval = null;
 var secRemain = 121;
 var secPenalty = 21;
 var questCount = 0;
-
-// LocalStorage Declarations
-var userInitials = localStorage.getItem("Initials");
-var userScore = localStorage.getItem("Score");
 
 // Object-Array Declaration of QnA
 var QnAList = [
@@ -109,13 +106,10 @@ function generateQnA() {
         questDisplay.textContent = "Question " + (questCount + 1) + ": " + QnAList[questCount].question;
         for (var i = 0; i < QnAList[questCount].answers.length; i++) {
             var optionBtn = document.createElement('button');
-            // optionBtn.setAttribute("id", "option" + i);
             optionBtn.setAttribute("class", "choiceBtn");
             optionBtn.textContent = QnAList[questCount].answers[i];
             optionBtn.dataset.correct = QnAList[questCount].correctAns === i + 1;
-            // console.log(optionBtn.dataset.correct);
             ansList.append(optionBtn);
-            // console.log(optionBtn);
         }
     } else {
         quizOver();
@@ -151,11 +145,11 @@ function quizOver() {
 }
 
 function renderHighscore() {
-    if (!userInitials || !userScore) {
-        return;
-    }
-
+    endCard.setAttribute("style", "display:none");
     highscoreCard.setAttribute("style", "display:block");
+
+    var userInitials = localStorage.getItem("Initials");
+    var userScore = localStorage.getItem("Score");
 
     var pElement = document.createElement('p');
     pElement.textContent = userInitials + " - " + userScore;
@@ -172,13 +166,9 @@ startBtn.addEventListener('click', function () {
 });
 
 ansList.addEventListener('click', function (event) {
-    // console.log("I've been clicked");
     var eventTarget = event.target;
     if (eventTarget.matches(".choiceBtn")) {
-        // console.log("It was a button!");
-        // console.log(eventTarget.dataset.correct);
         if (eventTarget.dataset.correct == "true") {
-            // console.log("Correct!");
             ansList.textContent = "";
             displayResult(true);
 
@@ -199,10 +189,20 @@ submitBtn.addEventListener('click', function() {
     var userInitials = document.querySelector("#userInitials").value;
     localStorage.setItem("Initials", userInitials);
 
+    // Initials validation check using Regular Expression
+    var regIntExp = /\d+/g;
+    var regSpcExp = /\s+/g;
     if (userInitials === "") {
-
+        warnMsg.textContent = "Error. Cannot be left blank.";
+        return;
+    } else if (regIntExp.test(userInitials)) {
+        warnMsg.textContent = "Error. Cannot have numbers.";
+        return;
+    } else if (regSpcExp.test(userInitials)) {
+        warnMsg.textContent = "Error. Cannot have spaces.";
+        return;
     }
-
+    
     renderHighscore();
 });
 

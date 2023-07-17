@@ -112,6 +112,8 @@ label {
     text-align: left;
     margin-top: 15px;
     margin-left: 35px;
+    color:red;
+    font-weight: bold;
 }
 
 #ansResult {
