@@ -5,10 +5,7 @@ var quizCard = document.querySelector('#quizCard');
 var endCard = document.querySelector('#endCard');
 var highscoreCard = document.querySelector('#highscoreCard');
 var quizTimer = document.querySelector('#quizTimer');
-var questDisplay = document.querySelector('#askQuestion');
 var ansList = document.querySelector('#ansList');
-var resultSentence = document.querySelector('#quizCongrats');
-var warnMsg = document.querySelector('#warnMsg');
 var ansResult = document.querySelector('#ansResult');
 var scoreContainer = document.querySelector('#scoreContainer');
 var startBtn = document.querySelector('#startBtn');
@@ -28,6 +25,8 @@ var timeInterval = null;
 var secRemain = 121;
 var secPenalty = 21;
 var questCount = 0;
+var initialList = [];
+var scoreList = [];
 
 // Object-Array Declaration of QnA
 var QnAList = [
@@ -83,6 +82,8 @@ var QnAList = [
 function startTimer() {
     quizTimer.setAttribute("style", "display:block");
 
+    secRemain = 121;
+
     timeInterval = setInterval(function () {
         secRemain--;
         quizTimer.textContent = "Time Remaining: " + secRemain;
@@ -100,6 +101,8 @@ function startQuiz() {
 };
 
 function generateQnA() {
+    var questDisplay = document.querySelector('#askQuestion');
+    questCount = 0;
 
     if (questCount < QnAList.length) {
         // Display Question w/ suggested answers
@@ -135,25 +138,42 @@ function displayResult(boolean) {
 
 function quizOver() {
     clearInterval(timeInterval);
+    
+    var resultSentence = document.querySelector('#quizCongrats');
+    
     quizTimer.textContent = "Quiz Over!";
     quizCard.setAttribute("style", "display:none");
     endCard.setAttribute("style", "display:block");
 
-    var userScore = secRemain;
     resultSentence.textContent = "Congrats! You scored " + secRemain + " points!";
-    localStorage.setItem("Score", userScore);
+    
+    scoreList.push(secRemain);
+
+    localStorage.setItem("Score", JSON.stringify(scoreList));
 }
 
 function renderHighscore() {
-    endCard.setAttribute("style", "display:none");
+    mainCard.setAttribute("style", "display:none");
     highscoreCard.setAttribute("style", "display:block");
 
-    var userInitials = localStorage.getItem("Initials");
-    var userScore = localStorage.getItem("Score");
+    var storedInitials = JSON.parse(localStorage.getItem("Initials"));
+    var storedScore = JSON.parse(localStorage.getItem("Score"));
 
-    var pElement = document.createElement('p');
-    pElement.textContent = userInitials + " - " + userScore;
-    scoreContainer.append(pElement);
+    if (storedInitials !== null && storedScore !== null) {
+        initialList = storedInitials;
+        scoreList = storedScore;
+    }
+
+    scoreContainer.innerHTML = "";
+
+    for (var i = 0; i < initialList.length; i++) {
+        var initials = initialList[i];
+        var score = scoreList[i];
+        
+        var pElement = document.createElement('p');
+        pElement.textContent = initials + " - " + score;
+        scoreContainer.append(pElement);
+    }
 }
 // End of Functions  //
 // // // // // // // //
@@ -186,12 +206,13 @@ ansList.addEventListener('click', function (event) {
 });
 
 submitBtn.addEventListener('click', function() {
+    var warnMsg = document.querySelector('#warnMsg');
     var userInitials = document.querySelector("#userInitials").value;
-    localStorage.setItem("Initials", userInitials);
 
     // Initials validation check using Regular Expression
     var regIntExp = /\d+/g;
     var regSpcExp = /\s+/g;
+    var regSpecExp = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/
     if (userInitials === "") {
         warnMsg.textContent = "Error. Cannot be left blank.";
         return;
@@ -201,17 +222,29 @@ submitBtn.addEventListener('click', function() {
     } else if (regSpcExp.test(userInitials)) {
         warnMsg.textContent = "Error. Cannot have spaces.";
         return;
+    } else if (regSpecExp.test(userInitials)) {
+        warnMsg.textContent = "Error. Cannot have special characters."
+        return;
     }
     
+    initialList.push(userInitials);
+    userInitials.value = "";
+
+    localStorage.setItem("Initials", JSON.stringify(initialList));
+
     renderHighscore();
 });
 
 backBtn.addEventListener('click', function() {
-
+    quizTimer.setAttribute("style", "display:none");
+    endCard.setAttribute("style", "display:none");
+    highscoreCard.setAttribute("style", "display:none");
+    mainCard.setAttribute("style", "display:block");
+    introCard.setAttribute("style", "display:flex");
 });
 
 clearBtn.addEventListener('click', function() {
-    
+    scoreContainer.textContent = "";
 });
 
 // End of Button Listeners //
