@@ -97,12 +97,12 @@ function startQuiz() {
     introCard.setAttribute("style", "display:none");
     quizCard.setAttribute("style", "display:flex;justify-content:space-between;align-items:flex-start;");
 
+    questCount = 0;
     generateQnA();
 };
 
 function generateQnA() {
     var questDisplay = document.querySelector('#askQuestion');
-    questCount = 0;
 
     if (questCount < QnAList.length) {
         // Display Question w/ suggested answers
@@ -208,6 +208,8 @@ ansList.addEventListener('click', function (event) {
 submitBtn.addEventListener('click', function() {
     var warnMsg = document.querySelector('#warnMsg');
     var userInitials = document.querySelector("#userInitials").value;
+
+    quizTimer.innerHTML = "";
 
     // Initials validation check using Regular Expression
     var regIntExp = /\d+/g;
