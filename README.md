@@ -33,7 +33,13 @@ The following image shows the web application's appearance and functionality:
 
 ## Student Result
 
-Link to Deployed Version:  
+Link to Deployed Version:  [https://nava003.github.io/Module_4_Challenge/](https://nava003.github.io/Module_4_Challenge/)
   
-The following images are snapshots of JavaScript interacting with the user accordingly:  
+The following images are snapshots of Web API interacting with the user accordingly:  
   
+
+![WAPI_C4_IMG1](https://github.com/nava003/Module_4_Challenge/assets/32070635/f500ec83-87d4-491f-a9c6-6c0c9de42dff)
+![WAPI_C4_IMG2](https://github.com/nava003/Module_4_Challenge/assets/32070635/d4f6a251-2ebf-4443-93e4-7eb02ba29ed4)
+![WAPI_C4_IMG3](https://github.com/nava003/Module_4_Challenge/assets/32070635/be345a6a-1801-4375-be95-81b4bd574f32)
+![WAPI_C4_IMG4](https://github.com/nava003/Module_4_Challenge/assets/32070635/d1096e7c-93ba-4bce-b968-5c5da393e973)
+![WAPI_C4_IMG5](https://github.com/nava003/Module_4_Challenge/assets/32070635/0c351a74-60ed-4021-85cb-b9528b858dc1)
